@@ -3,3 +3,6 @@
 
 en:
   hello: "Hello world"
+  spree:
+    betaout_settings: "Betaout Settings"
+    betaout_project_id: "Betaout Project ID"
