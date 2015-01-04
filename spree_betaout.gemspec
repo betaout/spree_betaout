@@ -3,12 +3,12 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = 'spree_betaout'
   s.version     = '2.4.2'
-  s.summary     = 'TODO: Add gem summary here'
-  s.description = 'TODO: Add (optional) gem description here'
+  s.summary     = 'Integrates your Spree store with the Betaout e-commerce marketing platform'
+  s.description = 'Integrates your Spree store with the Betaout e-commerce marketing platform'
   s.required_ruby_version = '>= 1.9.3'
 
-  # s.author    = 'You'
-  # s.email     = 'you@example.com'
+  s.author    = 'Brady Somerville'
+  s.email     = 'brady.somerville@gmail.com'
   # s.homepage  = 'http://www.spreecommerce.com'
 
   #s.files       = `git ls-files`.split("\n")
