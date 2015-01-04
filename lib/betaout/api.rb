@@ -12,8 +12,11 @@ module Betaout
     end
 
     def identify
-      self.class.get("/v1/user/identify", @options.merge({
-      }))
+       self.class.get("/v1/user/identify", @options.merge({}))
     end
+  end
+
+  def self.fetch_ott
+    API.new.identify.parsed_response["userId"]
   end
 end

@@ -1,7 +1,8 @@
 SpreeBetaout
 ============
 
-Introduction goes here.
+This gem integrates your Spree Store with Betaout, an e-commerce marketing
+platform.
 
 Installation
 ------------
@@ -36,4 +37,20 @@ Simply add this require statement to your spec_helper:
 require 'spree_betaout/factories'
 ```
 
-Copyright (c) 2015 [name of extension creator], released under the New BSD License
+Configuration
+------------
+
+Upon installation, go to your Spree Configuration tab, and go to the Betaout
+settings page. Enter your Project ID, API Key, and API Secret which can be
+retrived from your Betaout dashboard.
+
+Usage
+----
+
+On every request to a page in your Spree store, we check to see if the user has
+an OTT (One Time Token) from Betaout stored in their session. If not, we
+retrieve one and store it in their session.
+
+#TODO: describe how to add this functionality to pages not controlled by Spree
+
+Copyright (c) 2015 Brady Somerville, released under the New BSD License
