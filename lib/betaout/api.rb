@@ -33,7 +33,11 @@ module Betaout
     end
 
     def product_added(product)
-      self.class.post("/v1/product/add_product", body: 'params=' + @body_params.merge(product).to_json)
+      self.class.post("/v1/product/add", body: 'params=' + @body_params.merge(product).to_json)
+    end
+
+    def product_edited(product)
+      self.class.post("/v1/product/edit", body: 'params=' + @body_params.merge(product).to_json)
     end
   end
 
@@ -50,6 +54,11 @@ module Betaout
   def self.product_added(product)
     product_hash = Product.new(product: product).to_hash
     API.new.product_added(product_hash)
+  end
+
+  def self.product_edited(product)
+    product_hash = Product.new(product: product).to_hash
+    API.new.product_edited(product_hash)
   end
 
 end
