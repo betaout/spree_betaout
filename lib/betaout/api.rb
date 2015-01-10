@@ -49,6 +49,23 @@ module Betaout
       })
     end
 
+    def customer_removed_product_from_cart(email, product, quantity, order)
+      product['qty'] = quantity
+      body_params = @body_params.merge({
+        'email' => email ? email : '',
+        'action' => 'removed_from_cart',
+        'products' => [ product ],
+        'cartInfo' => {
+          'subtotalPrice' => order.item_total,
+          #'abandonedCheckoutUrl' => '', # TODO: add this
+        },
+      })
+
+      self.class.post("/v1/user/customer_activity", {
+        body: 'params=' + body_params.to_json,
+      })
+    end
+
     # TODO: does this work? should I expect to see the product in the Betaout admin if no one's viewed it or purchased it yet?
     def product_added(product)
       self.class.post("/v1/product/add", body: @body_params.merge(product).to_json)
@@ -74,6 +91,12 @@ module Betaout
     product_hash = Product.new(args).to_hash
     # TODO: add email if/when we have it
     API.new(args[:session]).customer_added_product_to_cart(nil, product_hash, args[:quantity], args[:order])
+  end
+
+  def self.customer_removed_product_from_cart(args)
+    product_hash = Product.new(args).to_hash
+    # TODO: add email if/when we have it
+    API.new(args[:session]).customer_removed_product_from_cart(nil, product_hash, args[:quantity], args[:order])
   end
 
   def self.product_added(args)
