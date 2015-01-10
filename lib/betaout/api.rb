@@ -31,6 +31,10 @@ module Betaout
         body: 'params=' + body_params.to_json,
       })
     end
+
+    def product_added(product)
+      self.class.post("/v1/product/add_product", body: 'params=' + @body_params.merge(product).to_json)
+    end
   end
 
   def self.fetch_ott(session)
@@ -42,4 +46,10 @@ module Betaout
     # TODO: add email if/when we have it
     API.new(args[:session]).customer_viewed_product(args[:session], nil, product_hash)
   end
+
+  def self.product_added(product)
+    product_hash = Product.new(product: product).to_hash
+    API.new.product_added(product_hash)
+  end
+
 end
