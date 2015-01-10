@@ -32,12 +32,13 @@ module Betaout
       })
     end
 
+    # TODO: does this work? should I expect to see the product in the Betaout admin if no one's viewed it or purchased it yet?
     def product_added(product)
-      self.class.post("/v1/product/add", body: 'params=' + @body_params.merge(product).to_json)
+      self.class.post("/v1/product/add", body: @body_params.merge(product).to_json)
     end
 
     def product_edited(product)
-      self.class.post("/v1/product/edit", body: 'params=' + @body_params.merge(product).to_json)
+      self.class.post("/v1/product/edit", body: @body_params.merge(product).to_json)
     end
   end
 
@@ -51,13 +52,13 @@ module Betaout
     API.new(args[:session]).customer_viewed_product(args[:session], nil, product_hash)
   end
 
-  def self.product_added(product)
-    product_hash = Product.new(product: product).to_hash
+  def self.product_added(args)
+    product_hash = Product.new(args).to_hash
     API.new.product_added(product_hash)
   end
 
-  def self.product_edited(product)
-    product_hash = Product.new(product: product).to_hash
+  def self.product_edited(args)
+    product_hash = Product.new(args).to_hash
     API.new.product_edited(product_hash)
   end
 
