@@ -6,7 +6,7 @@ Spree::BaseController.class_eval do
     def betaout_check_for_ott
       if session[:betaout_ott].nil?
         logger.debug "spree_betaout: didn't have an OTT, so fetching it"
-        ott = Betaout.fetch_ott
+        ott = Betaout.fetch_ott(session)
         logger.debug "spree_betaout: fetched OTT: #{ott.inspect}"
         session[:betaout_ott] = ott
       else
