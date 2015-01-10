@@ -20,7 +20,7 @@ module Betaout
       self.class.get("/v1/user/identify", body: @body_params)
     end
 
-    def customer_viewed_product(session, email, product)
+    def customer_viewed_product(email, product)
       body_params = @body_params.merge({
         'email' => email ? email : '',
         'action' => 'viewed',
@@ -49,7 +49,7 @@ module Betaout
   def self.customer_viewed_product(args)
     product_hash = Product.new(args).to_hash
     # TODO: add email if/when we have it
-    API.new(args[:session]).customer_viewed_product(args[:session], nil, product_hash)
+    API.new(args[:session]).customer_viewed_product(nil, product_hash)
   end
 
   def self.product_added(args)
