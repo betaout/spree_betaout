@@ -54,6 +54,7 @@ module Betaout
       self.class.post("/v1/product/add", body: @body_params.merge(product).to_json)
     end
 
+    # TODO: does this work? I get a 200 ok response, but doesn't change product name in Betaout admin, for instance
     def product_edited(product)
       self.class.post("/v1/product/edit", body: @body_params.merge(product).to_json)
     end
