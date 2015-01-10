@@ -1,5 +1,5 @@
 Spree::ProductsController.class_eval do
-  after_filter :betaout_track_product_viewed
+  after_filter :betaout_track_product_viewed, only: [:show]
 
   private
 
