@@ -101,6 +101,28 @@ module Betaout
         body: 'params=' + body_params.to_json,
       })
     end
+
+    def customer_completed(email, products, order)
+      body_params = @body_params.merge({
+        'email' => email ? email : '',
+        'action' => 'purchased',
+        'products' => products,
+        'cartInfo' => {
+          'orderId' => order.number,
+          'subtotalPrice' => order.item_total.to_f,
+          'totalShippingPrice' => order.ship_total.to_f,
+          'totalTaxes' => order.tax_total.to_f,
+          'totalDiscount' => order.promo_total.to_f,
+          'totalPrice' => order.total.to_f,
+          'financialStatus' => payment_state(order),
+        },
+      })
+
+      self.class.post("/v1/user/customer_activity", {
+        body: 'params=' + body_params.to_json,
+      })
+    end
+
     # TODO: does this work? should I expect to see the product in the Betaout admin if no one's viewed it or purchased it yet?
     def product_added(product)
       self.class.post("/v1/product/add", body: @body_params.merge(product).to_json)
@@ -109,6 +131,25 @@ module Betaout
     # TODO: does this work? I get a 200 ok response, but doesn't change product name in Betaout admin, for instance
     def product_edited(product)
       self.class.post("/v1/product/edit", body: @body_params.merge(product).to_json)
+    end
+
+    def payment_state(order)
+      if order.payment_state == 'balance_due'
+        #return 'partialy_refund' if order.refunds.any?
+        return 'partial_paid' if order.payments.completed.any?
+        return 'authorized' if order.payments.pending.any?
+        return 'pending' if order.payments.checkout.any?
+
+      elsif order.payment_state == 'paid'
+        #return 'refunded' if order.refunds.any?
+        return 'paid'
+
+      elsif order.state == 'canceled' && order.payment_total == 0 && payments.completed.none?
+        return 'voided'
+
+      else
+        return ''
+      end
     end
   end
 
@@ -152,6 +193,24 @@ module Betaout
     API.new(args[:session]).customer_shared_product(nil, product_hash)
   end
 
+  def self.customer_completed(args)
+
+    products = args[:line_items].map do |li|
+      product = Product.new(
+        product: li[:line_item].product,
+        page_url: li[:page_url],
+        picture_url: li[:picture_url],
+      ).to_hash
+
+      product[:price] = li[:line_item].price.to_s
+      product[:qty] = li[:qty]
+      product
+    end
+
+    # TODO: add email if/when we have it
+    API.new(args[:session]).customer_completed(nil, products, args[:order])
+  end
+
   def self.product_added(args)
     product_hash = Product.new(args).to_hash
     API.new.product_added(product_hash)
@@ -161,5 +220,4 @@ module Betaout
     product_hash = Product.new(args).to_hash
     API.new.product_edited(product_hash)
   end
-
 end
