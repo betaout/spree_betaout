@@ -41,8 +41,8 @@ Configuration
 ------------
 
 Upon installation, go to your Spree Configuration tab, and go to the Betaout
-settings page. Enter your Project ID, API Key, and API Secret which can be
-retrived from your Betaout dashboard.
+settings page. Enter your Project ID and API Key which can be
+retrieved from your Betaout dashboard.
 
 Usage
 ----

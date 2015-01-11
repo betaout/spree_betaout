@@ -3,7 +3,7 @@ module Spree
     class BetaoutSettingsController < Spree::Admin::BaseController
 
       def edit
-        @preferences = [:betaout_project_id, :betaout_api_key, :betaout_api_secret]
+        @preferences = [:betaout_project_id, :betaout_api_key]
       end
 
       def update
