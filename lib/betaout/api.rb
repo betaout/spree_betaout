@@ -14,15 +14,18 @@ module Betaout
         'timestamp' => Time.now.to_i,
       }
       @body_params['ott'] = session[:betaout_ott] if session[:betaout_ott].present?
+
+      @email = session[:betaout_email]
+      @name = session[:betaout_name]
     end
 
     def identify
-      self.class.get("/v1/user/identify", body: @body_params)
+      self.class.get("/v1/user/identify", body: @body_params.merge({name: @name, email: @email}))
     end
 
-    def customer_viewed_product(email, product)
+    def customer_viewed_product(product)
       body_params = @body_params.merge({
-        'email' => email ? email : '',
+        'email' => @email,
         'action' => 'viewed',
         'products' => [ product ],
       })
@@ -32,10 +35,10 @@ module Betaout
       })
     end
 
-    def customer_added_product_to_cart(email, product, quantity, order)
+    def customer_added_product_to_cart(product, quantity, order)
       product['qty'] = quantity
       body_params = @body_params.merge({
-        'email' => email ? email : '',
+        'email' => @email,
         'action' => 'add_to_cart',
         'products' => [ product ],
         'cartInfo' => {
@@ -49,10 +52,10 @@ module Betaout
       })
     end
 
-    def customer_removed_product_from_cart(email, product, quantity, order)
+    def customer_removed_product_from_cart(product, quantity, order)
       product['qty'] = quantity
       body_params = @body_params.merge({
-        'email' => email ? email : '',
+        'email' => @email,
         'action' => 'removed_from_cart',
         'products' => [ product ],
         'cartInfo' => {
@@ -66,9 +69,9 @@ module Betaout
       })
     end
 
-    def customer_added_product_to_wishlist(email, product)
+    def customer_added_product_to_wishlist(product)
       body_params = @body_params.merge({
-        'email' => email ? email : '',
+        'email' => @email,
         'action' => 'wishlist',
         'products' => [ product ],
       })
@@ -78,9 +81,9 @@ module Betaout
       })
     end
 
-    def customer_reviewed_product(email, product)
+    def customer_reviewed_product(product)
       body_params = @body_params.merge({
-        'email' => email ? email : '',
+        'email' => @email,
         'action' => 'reviewed',
         'products' => [ product ],
       })
@@ -90,9 +93,9 @@ module Betaout
       })
     end
 
-    def customer_shared_product(email, product)
+    def customer_shared_product(product)
       body_params = @body_params.merge({
-        'email' => email ? email : '',
+        'email' => @email,
         'action' => 'shared',
         'products' => [ product ],
       })
@@ -102,9 +105,9 @@ module Betaout
       })
     end
 
-    def customer_completed(email, products, order)
+    def customer_completed(products, order)
       body_params = @body_params.merge({
-        'email' => email ? email : '',
+        'email' => @email,
         'action' => 'purchased',
         'products' => products,
         'cartInfo' => {
@@ -159,38 +162,32 @@ module Betaout
 
   def self.customer_viewed_product(args)
     product_hash = Product.new(args).to_hash
-    # TODO: add email if/when we have it
-    API.new(args[:session]).customer_viewed_product(nil, product_hash)
+    API.new(args[:session]).customer_viewed_product(product_hash)
   end
 
   def self.customer_added_product_to_cart(args)
     product_hash = Product.new(args).to_hash
-    # TODO: add email if/when we have it
-    API.new(args[:session]).customer_added_product_to_cart(nil, product_hash, args[:quantity], args[:order])
+    API.new(args[:session]).customer_added_product_to_cart(product_hash, args[:quantity], args[:order])
   end
 
   def self.customer_removed_product_from_cart(args)
     product_hash = Product.new(args).to_hash
-    # TODO: add email if/when we have it
-    API.new(args[:session]).customer_removed_product_from_cart(nil, product_hash, args[:quantity], args[:order])
+    API.new(args[:session]).customer_removed_product_from_cart(product_hash, args[:quantity], args[:order])
   end
 
   def self.customer_added_product_to_wishlist(args)
     product_hash = Product.new(args).to_hash
-    # TODO: add email if/when we have it
-    API.new(args[:session]).customer_added_product_to_wishlist(nil, product_hash)
+    API.new(args[:session]).customer_added_product_to_wishlist(product_hash)
   end
 
   def self.customer_reviewed_product(args)
     product_hash = Product.new(args).to_hash
-    # TODO: add email if/when we have it
-    API.new(args[:session]).customer_reviewed_product(nil, product_hash)
+    API.new(args[:session]).customer_reviewed_product(product_hash)
   end
 
   def self.customer_shared_product(args)
     product_hash = Product.new(args).to_hash
-    # TODO: add email if/when we have it
-    API.new(args[:session]).customer_shared_product(nil, product_hash)
+    API.new(args[:session]).customer_shared_product(product_hash)
   end
 
   def self.customer_completed(args)
@@ -207,8 +204,7 @@ module Betaout
       product
     end
 
-    # TODO: add email if/when we have it
-    API.new(args[:session]).customer_completed(nil, products, args[:order])
+    API.new(args[:session]).customer_completed(products, args[:order])
   end
 
   def self.product_added(args)
