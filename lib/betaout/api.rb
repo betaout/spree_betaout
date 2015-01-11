@@ -78,6 +78,18 @@ module Betaout
       })
     end
 
+    def customer_reviewed_product(email, product)
+      body_params = @body_params.merge({
+        'email' => email ? email : '',
+        'action' => 'reviewed',
+        'products' => [ product ],
+      })
+
+      self.class.post("/v1/user/customer_activity", {
+        body: 'params=' + body_params.to_json,
+      })
+    end
+
     # TODO: does this work? should I expect to see the product in the Betaout admin if no one's viewed it or purchased it yet?
     def product_added(product)
       self.class.post("/v1/product/add", body: @body_params.merge(product).to_json)
@@ -115,6 +127,12 @@ module Betaout
     product_hash = Product.new(args).to_hash
     # TODO: add email if/when we have it
     API.new(args[:session]).customer_added_product_to_wishlist(nil, product_hash)
+  end
+
+  def self.customer_reviewed_product(args)
+    product_hash = Product.new(args).to_hash
+    # TODO: add email if/when we have it
+    API.new(args[:session]).customer_reviewed_product(nil, product_hash)
   end
 
   def self.product_added(args)
