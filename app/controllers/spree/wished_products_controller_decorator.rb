@@ -1,4 +1,4 @@
-if defined? Spree::WishedProductsController
+begin
   Spree::WishedProductsController.class_eval do
     after_filter :betaout_track_product_added_to_wishlist, only: :create
 
@@ -11,4 +11,5 @@ if defined? Spree::WishedProductsController
         })
       end
   end
+rescue
 end
