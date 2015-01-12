@@ -2,7 +2,7 @@
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
-  hello: "Hello world"
   spree:
-    betaout_settings: "Betaout Settings"
-    betaout_project_id: "Betaout Project ID"
+    betaout_account_id: Project ID
+    betaout_settings: Betaout Settings
+    betaout_account_key: Api Key

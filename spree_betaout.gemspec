@@ -1,27 +1,30 @@
 # encoding: UTF-8
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'spree/betaout/version'
+
 Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.name        = 'spree_betaout'
-  s.version     = '2.4.2'
-  s.summary     = 'Integrates your Spree store with the Betaout e-commerce marketing platform'
-  s.description = 'Integrates your Spree store with the Betaout e-commerce marketing platform'
+  s.version     = Spree::Betaout::VERSION
+  s.summary     = 'Betaout extension for Spree'
+  s.description = 'Betaout extension for Spree'
   s.required_ruby_version = '>= 1.9.3'
 
-  s.author    = 'Brady Somerville'
-  s.email     = 'brady.somerville@gmail.com'
-  # s.homepage  = 'http://www.spreecommerce.com'
+  s.author    = 'Betaout'
+  s.homepage  = 'http://www.betaout.com'
 
   #s.files       = `git ls-files`.split("\n")
   #s.test_files  = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.require_path = 'lib'
   s.requirements << 'none'
 
-  s.add_dependency 'spree_core', '~> 2.4.2'
+  s.add_dependency 'spree_core', '~> 2.0'
 
   s.add_development_dependency 'capybara', '~> 2.4'
   s.add_development_dependency 'coffee-rails'
   s.add_development_dependency 'database_cleaner'
-  s.add_development_dependency 'factory_girl', '~> 4.5'
+  s.add_development_dependency 'factory_girl', '~> 4.4'
   s.add_development_dependency 'ffaker'
   s.add_development_dependency 'rspec-rails',  '~> 3.1'
   s.add_development_dependency 'sass-rails', '~> 4.0.2'

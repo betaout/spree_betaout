@@ -1,36 +1,24 @@
-<%= render partial: 'spree/admin/shared/configuration_menu' %>
+<%= render :partial => 'spree/admin/shared/configuration_menu' %>
 
 <% content_for :page_title do %>
   <%= Spree.t(:betaout_settings) %>
 <% end %>
 
-<%= form_tag admin_betaout_settings_path, method: :put do %>
+<%= form_tag admin_betaout_settings_path, :method => :put do %>
   <div id="preferences" data-hook>
-
-      <div class="row">
-        <div class="alpha six columns">
-          <fieldset class="security no-border-bottom">
-            <legend align="center"><%= Spree.t(:betaout_login_settings)%></legend>
-            <% @preferences.each do |key|
-                type = Spree::Config.preference_type(key) %>
-                <div class="field">
-                  <%= label_tag(key, Spree.t(key)) + tag(:br) if type != :boolean %>
-                  <%= preference_field_tag(key, Spree::Config[key], type: type) %>
-                  <%= label_tag(key, Spree.t(key)) + tag(:br) if type == :boolean %>
-                </div>
-            <% end %>
-          </fieldset>
-        </div>
+    <fieldset class="general no-border-top">
+      <div class="field">
+        <%= label_tag(:account_id, Spree.t(:betaout_account_id)) + tag(:br) %>
+        <%= preference_field_tag(:account_id, Spree::Betaout::Config.account_id, :type => :string) %>
       </div>
 
+       <div class="field">
+        <%= label_tag(:account_key, Spree.t(:betaout_account_key)) + tag(:br) %>
+        <%= preference_field_tag(:account_key, Spree::Betaout::Config.account_key, :type => :string) %>
+      </div>
       <div class="form-buttons filter-actions actions" data-hook="buttons">
-        <%= button Spree.t('actions.update'), 'refresh' %>
-        <span class="or"><%= Spree.t(:or) %></span>
-        <%= link_to_with_icon 'remove', Spree.t('actions.cancel'), edit_admin_betaout_settings_url, class: 'button' %>
+        <%= button Spree.t('actions.update'), 'icon-refresh' %>
       </div>
-
     </fieldset>
-
   </div>
-
 <% end %>

@@ -5,6 +5,7 @@ module Betaout
 
     include HTTParty
     format :json
+    debug_output $stdout
 
     def initialize(session = {})
       self.class.base_uri "#{Spree::Config.betaout_project_id}.betaout.com"
@@ -24,6 +25,7 @@ module Betaout
     end
 
     def customer_viewed_product(product)
+      puts "in API.customer viewed product"
       body_params = @body_params.merge({
         'email' => @email,
         'action' => 'viewed',
