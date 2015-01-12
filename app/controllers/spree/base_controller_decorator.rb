@@ -17,10 +17,18 @@ Spree::BaseController.class_eval do
     end
 
     def betaout_set_email
-      session[:betaout_email] = (current_order && current_order.email) || (spree_current_user && spree_current_user.email) || nil
+      if order && order.email
+        session[:betaout_email] = order.email
+      elsif spree_current_user && spree_current_user.email
+        session[:betaout_email] = spree_current_user.email
+      end
     end
 
     def betaout_set_name
-      session[:betaout_name] = current_order.name if current_order && current_order.name
+      session[:betaout_name] = order.name if order && order.name
+    end
+
+    def order
+      defined?(current_order) && current_order ? current_order : nil
     end
 end

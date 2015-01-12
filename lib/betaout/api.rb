@@ -8,10 +8,10 @@ module Betaout
     debug_output $stdout
 
     def initialize(session = {})
-      self.class.base_uri "#{Spree::Config.betaout_project_id}.betaout.com"
+      self.class.base_uri "#{Spree::Betaout::Config.account_id}.betaout.com"
 
       @body_params = {
-        'apiKey' => Spree::Config.betaout_api_key,
+        'apiKey' => Spree::Betaout::Config.account_key,
         'timestamp' => Time.now.to_i,
       }
       @body_params['ott'] = session[:betaout_ott] if session[:betaout_ott].present?
@@ -25,7 +25,6 @@ module Betaout
     end
 
     def customer_viewed_product(product)
-      puts "in API.customer viewed product"
       body_params = @body_params.merge({
         'email' => @email,
         'action' => 'viewed',
