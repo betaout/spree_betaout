@@ -16,6 +16,12 @@
         <%= label_tag(:account_key, Spree.t(:betaout_account_key)) + tag(:br) %>
         <%= preference_field_tag(:account_key, Spree::Betaout::Config.account_key, :type => :string) %>
       </div>
+      <div class="field">
+        <%= label_tag :tracking_method, Spree.t(:betaout_tracking_method) + tag(:br) %>
+        <%= select_tag(:tracking_method,
+                       options_for_select([:frontend, :backend], Spree::Betaout::Config.tracking_method),
+                       class: 'select2') %>
+      </div>
       <div class="form-buttons filter-actions actions" data-hook="buttons">
         <%= button Spree.t('actions.update'), 'icon-refresh' %>
       </div>
