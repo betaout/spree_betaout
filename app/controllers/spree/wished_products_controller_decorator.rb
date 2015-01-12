@@ -1,6 +1,6 @@
 begin
   Spree::WishedProductsController.class_eval do
-    after_filter :betaout_track_product_added_to_wishlist, only: :create
+    after_filter :betaout_track_product_added_to_wishlist, only: :create, if: "Spree::Betaout::Config.track_via_backend?"
 
     private
 

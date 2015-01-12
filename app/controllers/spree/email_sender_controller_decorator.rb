@@ -1,7 +1,7 @@
 begin
   Spree::EmailSenderController.class_eval do
 
-    after_filter :betaout_track_product_shared, only: :send_mail
+    after_filter :betaout_track_product_shared, only: :send_mail, if: "Spree::Betaout::Config.track_via_backend?"
 
     private
 

@@ -1,7 +1,7 @@
 begin
   Spree::ReviewsController.class_eval do
 
-    after_filter :betaout_track_product_reviewed, only: :create
+    after_filter :betaout_track_product_reviewed, only: :create, if: "Spree::Betaout::Config.track_via_backend?"
 
     private
 

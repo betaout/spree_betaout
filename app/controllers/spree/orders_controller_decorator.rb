@@ -1,6 +1,6 @@
 Spree::OrdersController.class_eval do
-  after_filter :betaout_track_product_added_to_cart, only: :populate
-  around_filter :betaout_track_product_removed_from_cart, only: :update
+  after_filter :betaout_track_product_added_to_cart, only: :populate, if: "Spree::Betaout::Config.track_via_backend?"
+  around_filter :betaout_track_product_removed_from_cart, only: :update, if: "Spree::Betaout::Config.track_via_backend?"
 
   private
 

@@ -1,5 +1,5 @@
 Spree::CheckoutController.class_eval do
-  after_filter :betaout_track_customer_completed, only: :update
+  after_filter :betaout_track_customer_completed, only: :update, if: "Spree::Betaout::Config.track_via_backend?"
 
   private
 

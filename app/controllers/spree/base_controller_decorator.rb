@@ -1,7 +1,7 @@
 Spree::BaseController.class_eval do
-  before_filter :betaout_check_for_ott
-  before_filter :betaout_set_email
-  before_filter :betaout_set_name
+  before_filter :betaout_check_for_ott, if: "Spree::Betaout::Config.track_via_backend?"
+  before_filter :betaout_set_email, if: "Spree::Betaout::Config.track_via_backend?"
+  before_filter :betaout_set_name, if: "Spree::Betaout::Config.track_via_backend?"
 
   private
 

@@ -1,3 +1,4 @@
+<% if Spree::Betaout::Config.tracking_method == "frontend" %>
 <script type="text/javascript">
 	var API_Key =  "<%= Spree::Betaout::Config.account_key%>";
 	var Project_Id ="<%= Spree::Betaout::Config.account_id%>";
@@ -199,3 +200,4 @@
 <% end %>
 };
 </script>
+<% end %>

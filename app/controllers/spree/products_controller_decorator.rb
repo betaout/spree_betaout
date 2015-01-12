@@ -1,5 +1,5 @@
 Spree::ProductsController.class_eval do
-  after_filter :betaout_track_product_viewed, only: [:show]
+  after_filter :betaout_track_product_viewed, only: [:show], if: "Spree::Betaout::Config.track_via_backend?"
 
   private
 
