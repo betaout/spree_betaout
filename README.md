@@ -19,6 +19,20 @@ bundle
 bundle exec rails g spree_betaout:install
 ```
 
+Other Extensions
+---------------
+
+This extension can track activities supplied by some other popular Spree
+extensions:
+
+* spree_wishlist
+* spree_email_to_friend
+* spree_reviews
+* spree_social_products
+
+To track activities from actions supplied by those extensions, install them
+according to the instructions supplied with those gems.
+
 Releases
 --------
 
