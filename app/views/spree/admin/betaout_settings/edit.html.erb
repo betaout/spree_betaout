@@ -19,7 +19,9 @@
       <div class="field">
         <%= label_tag :tracking_method, Spree.t(:betaout_tracking_method) + tag(:br) %>
         <%= select_tag(:tracking_method,
-                       options_for_select([:frontend, :backend], Spree::Betaout::Config.tracking_method),
+                       options_for_select({"Tracking events through Javascript only" => :frontend,
+                                           "Tracking events through Server integration" => :backend,
+                                          }, Spree::Betaout::Config.tracking_method),
                        class: 'select2') %>
       </div>
       <div class="form-buttons filter-actions actions" data-hook="buttons">
