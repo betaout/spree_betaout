@@ -1,200 +1,158 @@
 <script type="text/javascript">
-	var API_Key =  "<%= Spree::Betaout::Config.account_key%>";
-	var Project_Id ="<%= Spree::Betaout::Config.account_id%>";
-	var AmplifyConnect_Widget = false;var Amplify={}; var shareTracking = true;var urlTracking = false;function _amplify(u) {var d = document, f = d.getElementsByTagName("script")[0],_sc = d.createElement("script");_sc.type = "text/javascript";_sc.async = true;_sc.src = u;f.parentNode.insertBefore(_sc, f);var __d = false;_sc.onload = _sc.onreadystatechange = function() {if (!__d && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete")) {__d = true;Amplify = new AmplifyEngine();}};}_amplify("http://1.amplify.to/tejasv2/testerNew.js");window.amplifyInit = function() {
-	var betaoutCurrentLoginUser="";
-	<% if spree_current_user %>
-	   	betaoutCurrentLoginUser ="<%= spree_current_user.email %>";
-	<% end %>
-	
-	Amplify.identify({
-	"email": betaoutCurrentLoginUser,
-	"name": ""
-	});
-</script>
+  var API_Key =  "<%= Spree::Betaout::Config.account_key%>";
+  var Project_Id ="<%= Spree::Betaout::Config.account_id%>";
+  var AmplifyConnect_Widget = false;var Amplify={}; var shareTracking = true;var urlTracking = false;function _amplify(u) {var d = document, f = d.getElementsByTagName("script")[0],_sc = d.createElement("script");_sc.type = "text/javascript";_sc.async = true;_sc.src = u;f.parentNode.insertBefore(_sc, f);var __d = false;_sc.onload = _sc.onreadystatechange = function() {if (!__d && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete")) {__d = true;Amplify = new AmplifyEngine();}};}_amplify("http://1.amplify.to/tejasv2/testerNew.js");
 
-<% if Spree::Betaout::Config.tracking_method == "frontend" %>
-<script type="text/javascript">
-	
-	<% if controller_name == "home" %>
-      <% elsif @product %>      
-			var product_url=location.protocol+"//"+location.host+"/products/<%= @product.slug %>";
-			var image_url="";
-			<% for item in @product.images %>
-			       image_url=location.protocol+"//"+location.host;	
-			       image_url +="<%= item.mini_url %>";			       
-     		<% end %>			
-     		/*
-     		<%= debug @product %>
-     		*/    
-			Amplify.customerActivity(betaoutCurrentLoginUser, 'viewed', {
-                                'products' : [{
-                                        'productId' : "<%= @product.id %>",
-                                        'sku' : "<%= @product.sku %>",
-                                        'productTitle' : "<%= @product.name %>",
-                                        'price' : "<%= @product.price %>",
-                                        'specialPrice' : "<%= @product.price %>",
-                                        'brandName' : '',
-                                        'status' : '',
-                                        'stockAvailability' : '',
-                                        'pageURL' : product_url,
-                                        'pictureURL' : image_url,
-                                        'currency' : '',
-                                        'category' : "<%= @product.shipping_category_id %>"
-                                }]
-			});
-			
-			if ($) {
-				$(document).ready(function() {
-					$("button#add-to-cart-button").on("click", function(event) {	
-                                                Amplify.customerActivity(betaoutCurrentLoginUser, 'add_to_cart', {
-                                                        'products' : [{
-                                                        'productId' : "<%= @product.id %>",
-                                                        'sku' : "<%= @product.sku %>",
-                                                        'productTitle' : "<%= @product.name %>",
-                                                        'price' : "<%= @product.price %>",
-                                                        'specialPrice' : "<%= @product.price %>",
-                                                        'brandName' : '',
-                                                        'status' : '',
-                                                        'stockAvailability' : '',
-                                                        'pageURL' : product_url,
-                                                        'pictureURL' : image_url,
-                                                        'currency' : '',
-                                                        'category' : "<%= @product.shipping_category_id %>",
-                                                        'currency' : '',
-                                                        'qty' : '1'
-                                                        }],
-                                                        'cartInfo' : {
-                                                            'subtotalPrice' : "<%= @product.price %>",
-                                                            'abandonedCheckoutUrl' : product_url
-                                                        }
-                                                });
-		
-						return true; 
-					});
-				});
-			}
-	<% elsif controller_name == "orders" %>
-			<% if params[:id].present? %>
-			         
-			<% if @order && order_just_completed?(@order) %>
-					var Products={},index=-1;
-					var image_url="";					
-					
-					/*
-				 <%= debug @order.promotions %>
-				 */
-				   
-				   
-				   
-				   
-				   
-				   
-					   var promocode="";
-					   <% if @order.promotions %>
-							<% for code in @order.promotions %>
-							promocode="<%= code.code %>";	
-					        <% end %>
-				       <% end %>               
-					
-						<% for item in @order.line_items %>
-							    var image_url=location.protocol+"//"+location.host;
-								<% for img in item.variant.images %>
-								   image_url=location.protocol+"//"+location.host;	
-						       	   image_url +="<%= img.mini_url %>";	
-			                    <% end %>
-							    index++;
-							    Products[index]={
-									'productId' : "<%= item.variant_id %>",
-									'sku' : "<%= item.sku %>",
-									'productTitle' : "<%= item.name %>",
-									'price' : "<%= item.price %>",
-									'qty' : "<%= item.quantity %>",
-									'currency' : "<%= @order.currency %>",
-									'specialPrice' : "<%= item.price %>",
-									'status' : "",
-									'stockAvailability' : "",
-									'pageURL' : "",
-									'pictureURL' : image_url,
-									'brandName' : 'xxx',
-									'category' : "categories1,categories2,categories3'",
-								}
-						<% end %>
-							Amplify.customerActivity("<%= @order.email %>", 'purchased', {
-								'products' : Products,
-								'cartInfo' : {
-									'orderId' : "<%= @order.number %>",
-									'shoppingCartNo' : '', //optional
-									'subtotalPrice' : "<%= @order.item_total %>",
-									'totalShippingPrice' :"<%= @order.ship_total %>",
-									'totalTaxes' : "<%= @order.tax_total %>",
-									'totalDiscount' : "<%= @order.adjustment_total %>",
-									'totalPrice' : "<%= @order.total %>",
-									'promocode' : promocode,
-									'abandonedCheckoutUrl' : '',
-									'financialStatus' : "<%= @order.payment_state %>", // checkout, processing, painding, failed, void, compleated
-								}
-							});
-					<% end %>
-				<% else %>
-				$(document).ready(function() {								
-					<% for item in @order.line_items %>
-					/*
-					$('form#update-cart a.delete').on("click", function(event) {
-					    Amplify.customerActivity(betaoutCurrentLoginUser, 'removed_from_cart', {
-						'products' :[{
-							'productId' : "<%= item.variant_id %>",
-							'sku' : "<%= item.sku %>",
-							'productTitle' : "<%= item.name %>",
-							'price' : "<%= item.price %>",
-							'qty' : "<%= item.quantity %>",
-							'currency' : "<%= @order.currency %>",
-							'specialPrice' :"<%= item.price %>",
-							'status' : "",
-							'stockAvailability' : "",
-							'pageURL' : "",
-							'pictureURL' :"",
-							'brandName' : '',
-							'category' : "<%= item.tax_category_id %>",
-						}],
-						'cartInfo' : {
-							'subtotalPrice' : "<%= @order.item_total %>"
-						}
-					});
-					return true;
-				});
-				*/
-					<% end %>				
-				
-			});
-			<% end %>		
-			
+  window.amplifyInit = function() {
+    var betaoutCurrentLoginUser="";
+    <% if spree_current_user %>
+      betaoutCurrentLoginUser ="<%= spree_current_user.email %>";
+    <% end %>
 
-<% elsif controller_name == "checkout" %>
-	  <% if params[:state] == "address" %>
-        Amplify.addEvent(betaoutCurrentLoginUser, {"checkout_process_billing": {
-                 url: window.location.href
-                 }
-        });
-      <% elsif params[:state] == "delivery" %>
-        Amplify.addEvent(betaoutCurrentLoginUser, {"checkout_process_shipping": {
-                 url: window.location.href
-                 }
-        });        
-      <% elsif params[:state] == "payment" %>
-        Amplify.addEvent(betaoutCurrentLoginUser, {"checkout_process_payment": {
-                 url: window.location.href
-                 }
-        });        
-      <% elsif params[:state] == "confirm" %>
-        Amplify.addEvent(betaoutCurrentLoginUser, {"checkout_process_completed": {
-                 url: window.location.href
-                 }
-        });
+    Amplify.identify({
+      "email": betaoutCurrentLoginUser,
+      "name": ""
+    });
+
+  <% if Spree::Betaout::Config.tracking_method == "frontend" %>
+
+    <% if controller_name == "home" %>
+
+    <% elsif @product %>
+
+      var product_url=location.protocol+"//"+location.host+"/products/<%= @product.slug %>";
+      var image_url="";
+
+      <% for item in @product.images %>
+       image_url=location.protocol+"//"+location.host;
+       image_url +="<%= item.mini_url %>";
       <% end %>
-	
-	
-<% end %>
-};
+
+      Amplify.customerActivity(betaoutCurrentLoginUser, 'viewed', {
+        'products' : [{
+          'productId' : "<%= @product.id %>",
+          'sku' : "<%= @product.sku %>",
+          'productTitle' : "<%= @product.name %>",
+          'price' : "<%= @product.price %>",
+          'specialPrice' : "<%= @product.price %>",
+          'brandName' : '',
+          'status' : '',
+          'stockAvailability' : '',
+          'pageURL' : product_url,
+          'pictureURL' : image_url,
+          'currency' : '',
+          'category' : "<%= @product.shipping_category_id %>"
+        }]
+      });
+
+      if ($) {
+        $(document).ready(function() {
+
+          $("button#add-to-cart-button").on("click", function(event) {
+            Amplify.customerActivity(betaoutCurrentLoginUser, 'add_to_cart', {
+              'products' : [{
+                'productId' : "<%= @product.id %>",
+                'sku' : "<%= @product.sku %>",
+                'productTitle' : "<%= @product.name %>",
+                'price' : "<%= @product.price %>",
+                'specialPrice' : "<%= @product.price %>",
+                'brandName' : '',
+                'status' : '',
+                'stockAvailability' : '',
+                'pageURL' : product_url,
+                'pictureURL' : image_url,
+                'currency' : '',
+                'category' : "<%= @product.shipping_category_id %>",
+                'currency' : '',
+                'qty' : '1'
+              }],
+              'cartInfo' : {
+              'subtotalPrice' : "<%= @product.price %>",
+              'abandonedCheckoutUrl' : product_url
+              }
+            });
+
+            return true;
+          });
+        });
+      }
+
+    <% elsif controller_name == "orders" %>
+
+      <% if params[:id].present? %>
+
+        <% if @order && order_just_completed?(@order) %>
+
+          var Products={},index=-1;
+          var image_url="";
+
+          var promocode="";
+          <% if @order.promotions %>
+            <% for code in @order.promotions %>
+              promocode="<%= code.code %>";
+            <% end %>
+          <% end %>
+
+          <% for item in @order.line_items %>
+            var image_url=location.protocol+"//"+location.host;
+            <% for img in item.variant.images %>
+              image_url=location.protocol+"//"+location.host;
+              image_url +="<%= img.mini_url %>";
+            <% end %>
+
+            index++;
+            Products[index] = {
+              'productId' : "<%= item.variant_id %>",
+              'sku' : "<%= item.sku %>",
+              'productTitle' : "<%= item.name %>",
+              'price' : "<%= item.price %>",
+              'qty' : "<%= item.quantity %>",
+              'currency' : "<%= @order.currency %>",
+              'specialPrice' : "<%= item.price %>",
+              'status' : "",
+              'stockAvailability' : "",
+              'pageURL' : "",
+              'pictureURL' : image_url,
+              'brandName' : 'xxx',
+              'category' : "categories1,categories2,categories3'",
+            }
+          <% end %>
+
+          Amplify.customerActivity("<%= @order.email %>", 'purchased', {
+            'products' : Products,
+            'cartInfo' : {
+              'orderId' : "<%= @order.number %>",
+              'shoppingCartNo' : '', //optional
+              'subtotalPrice' : "<%= @order.item_total %>",
+              'totalShippingPrice' :"<%= @order.ship_total %>",
+              'totalTaxes' : "<%= @order.tax_total %>",
+              'totalDiscount' : "<%= @order.adjustment_total %>",
+              'totalPrice' : "<%= @order.total %>",
+              'promocode' : promocode,
+              'abandonedCheckoutUrl' : '',
+              'financialStatus' : "<%= @order.payment_state %>", // checkout, processing, painding, failed, void, compleated
+            }
+          });
+        <% end %>
+      <% end %>
+
+
+    <% elsif controller_name == "checkout" %>
+
+      <% if params[:state] == "address" %>
+
+        Amplify.addEvent(betaoutCurrentLoginUser, {"checkout_process_billing": { url: window.location.href } });
+
+      <% elsif params[:state] == "delivery" %>
+          Amplify.addEvent(betaoutCurrentLoginUser, {"checkout_process_shipping": { url: window.location.href } });
+
+      <% elsif params[:state] == "payment" %>
+          Amplify.addEvent(betaoutCurrentLoginUser, {"checkout_process_payment": { url: window.location.href } });
+
+      <% elsif params[:state] == "confirm" %>
+          Amplify.addEvent(betaoutCurrentLoginUser, {"checkout_process_completed": { url: window.location.href } });
+      <% end %>
+    <% end %>
+  <% end %>
+  }; // end of window.amplifyInit
 </script>
-<% end %>
