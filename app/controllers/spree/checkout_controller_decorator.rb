@@ -5,6 +5,7 @@ Spree::CheckoutController.class_eval do
 
     def betaout_track_customer_completed
       if @order.completed? && flash['order_completed']
+        Betaout.fetch_ott(session)
         Betaout.customer_completed({
           session: session,
           order: @order,
