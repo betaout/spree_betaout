@@ -15,6 +15,12 @@ module Betaout
           'n' => t.name,
           'p' => t.parent_id,
         }
+        t.ancestors.each do |a|
+          category_hash[a.id] = {
+            'n' => a.name,
+            'p' => a.parent_id ? a.parent_id : 0,
+          }
+        end
       end
 
       {
