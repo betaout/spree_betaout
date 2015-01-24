@@ -10,7 +10,7 @@ Spree::ProductsController.class_eval do
         session: session,
         product: @product,
         page_url: product_url(@product),
-        picture_url: root_url + @product.images.first.attachment.url,
+        picture_url: @product.images.any? ? root_url + @product.images.first.attachment.url : nil,
       })
     end
 end

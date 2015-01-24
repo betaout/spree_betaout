@@ -13,7 +13,7 @@ Spree::CheckoutController.class_eval do
             {
               line_item: li,
               page_url: product_url(li.product),
-              picture_url: root_url + li.product.images.first.attachment.url,
+              picture_url: li.product.images.any? ? root_url + li.product.images.first.attachment.url : nil,
               qty: li.quantity,
             }
           },
