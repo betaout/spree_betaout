@@ -1,0 +1,32 @@
+<%= render :partial => 'spree/admin/shared/configuration_menu' %>
+
+<% content_for :page_title do %>
+  <%= Spree.t(:betaout_settings) %>
+<% end %>
+
+<%= form_tag admin_betaout_settings_path, :method => :put do %>
+  <div id="preferences" data-hook>
+    <fieldset class="general no-border-top">
+      <div class="field">
+        <%= label_tag(:account_id, Spree.t(:betaout_account_id)) + tag(:br) %>
+        <%= preference_field_tag(:account_id, Spree::Betaout::Config.account_id, :type => :string) %>
+      </div>
+
+       <div class="field">
+        <%= label_tag(:account_key, Spree.t(:betaout_account_key)) + tag(:br) %>
+        <%= preference_field_tag(:account_key, Spree::Betaout::Config.account_key, :type => :string) %>
+      </div>
+      <div class="field">
+        <%= label_tag :tracking_method, Spree.t(:betaout_tracking_method) + tag(:br) %>
+        <%= select_tag(:tracking_method,
+                       options_for_select({"Tracking events through Javascript only" => :frontend,
+                                           "Tracking events through Server integration" => :backend,
+                                          }, Spree::Betaout::Config.tracking_method),
+                       class: 'select2') %>
+      </div>
+      <div class="form-buttons filter-actions actions" data-hook="buttons">
+        <%= button Spree.t('actions.update'), 'icon-refresh' %>
+      </div>
+    </fieldset>
+  </div>
+<% end %>

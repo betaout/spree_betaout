@@ -1,0 +1,2 @@
+<!-- insert_bottom '.sidebar' -->
+<%= configurations_sidebar_menu_item Spree.t(:betaout_settings), edit_admin_betaout_settings_path %>
