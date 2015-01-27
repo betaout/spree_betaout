@@ -9,7 +9,7 @@ Installation
 Add spree_betaout to your Gemfile:
 
 ```ruby
-gem 'spree_betaout', :git => 'https://github.com/betaout/spree_betaout.git', :branch => release-1.0
+gem 'spree_betaout', :git => 'https://github.com/betaout/spree_betaout.git'
 ```
 
 Bundle your dependencies and run the installation generator:
