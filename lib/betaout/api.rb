@@ -8,27 +8,41 @@ module Betaout
     debug_output $stdout
 
     def initialize(session = {})
-      self.class.base_uri "#{Spree::Betaout::Config.account_id}.betaout.com"
+      self.class.base_uri "#{Spree::Betaout::Config.account_id}.betaout.in"
 
       @body_params = {
         'apiKey' => Spree::Betaout::Config.account_key,
         'timestamp' => Time.now.to_i,
       }
-      @body_params['ott'] = session[:betaout_ott] if session[:betaout_ott].present?
-
+      @token = session[:betaout_ott] if session[:betaout_ott].present?
+      @body_params['token']= session[:betaout_ott] if session[:betaout_ott].present?
+      @body_params['ip'] = session[:betaout_ip] if session[:betaout_ip].present?
+      @body_params['systemInfo'] = session[:betaout_systemInfo] if session[:betaout_systemInfo].present?
+      @ip=session[:betaout_ip] if session[:betaout_ip].present?
+      @systemInfo=session[:betaout_systemInfo] if session[:betaout_systemInfo].present?
       @email = session[:betaout_email]
-      @name = session[:betaout_name]
+      if @email.to_s!=''
+      @body_params['email']=session[:betaout_email]
+      @body_params['token']=""
+      end
+     if @name
+      @body_params['name']=session[:betaout_name]
+      end
+     
     end
 
     def identify
-      self.class.get("/v1/user/identify", body: @body_params.merge({name: @name, email: @email}))
+      body_params=@body_params.merge({'token'=>@token})
+      self.class.post("/v1/user/identify",{body:'params='+body_params.to_json})
     end
 
     def customer_viewed_product(product)
-      body_params = @body_params.merge({
+     body_params = @body_params.merge({
         'email' => @email,
         'action' => 'viewed',
-        'products' => [ product ],
+        'pd' => [ product ],
+        'ip'=>@ip,
+        'systemInfo'=>@systemInfo
       })
 
       self.class.post("/v1/user/customer_activity", {
@@ -41,11 +55,14 @@ module Betaout
       body_params = @body_params.merge({
         'email' => @email,
         'action' => 'add_to_cart',
-        'products' => [ product ],
-        'cartInfo' => {
+        'pd' => [ product ],
+        'or' => {
           'subtotalPrice' => order.item_total,
           #'abandonedCheckoutUrl' => '', # TODO: add this
         },
+        'currency'=>order.currency,
+        'ip'=>@ip,
+        'systemInfo'=>@systemInfo
       })
 
       self.class.post("/v1/user/customer_activity", {
@@ -58,11 +75,13 @@ module Betaout
       body_params = @body_params.merge({
         'email' => @email,
         'action' => 'removed_from_cart',
-        'products' => [ product ],
-        'cartInfo' => {
+        'pd' => [ product ],
+        'or' => {
           'subtotalPrice' => order.item_total,
           #'abandonedCheckoutUrl' => '', # TODO: add this
         },
+       'ip'=>@ip,
+        'systemInfo'=>@systemInfo
       })
 
       self.class.post("/v1/user/customer_activity", {
@@ -74,7 +93,9 @@ module Betaout
       body_params = @body_params.merge({
         'email' => @email,
         'action' => 'wishlist',
-        'products' => [ product ],
+        'pd' => [ product ],
+        'ip'=>@ip,
+        'systemInfo'=>@systemInfo
       })
 
       self.class.post("/v1/user/customer_activity", {
@@ -86,7 +107,9 @@ module Betaout
       body_params = @body_params.merge({
         'email' => @email,
         'action' => 'reviewed',
-        'products' => [ product ],
+        'pd' => [ product ],
+         'ip'=>@ip,
+        'systemInfo'=>@systemInfo
       })
 
       self.class.post("/v1/user/customer_activity", {
@@ -98,7 +121,9 @@ module Betaout
       body_params = @body_params.merge({
         'email' => @email,
         'action' => 'shared',
-        'products' => [ product ],
+        'pd' => [ product ],
+        'ip'=>@ip,
+        'systemInfo'=>@systemInfo
       })
 
       self.class.post("/v1/user/customer_activity", {
@@ -110,8 +135,8 @@ module Betaout
       body_params = @body_params.merge({
         'email' => @email,
         'action' => 'purchased',
-        'products' => products,
-        'cartInfo' => {
+        'pd' => products,
+        'or' => {
           'orderId' => order.number,
           'subtotalPrice' => order.item_total.to_f,
           'totalShippingPrice' => order.ship_total.to_f,
@@ -120,6 +145,8 @@ module Betaout
           'totalPrice' => order.total.to_f,
           'financialStatus' => payment_state(order),
         },
+        'ip'=>@ip,
+        'systemInfo'=>@systemInfo
       })
 
       self.class.post("/v1/user/customer_activity", {

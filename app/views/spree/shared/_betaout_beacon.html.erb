@@ -3,7 +3,7 @@
  var category_info={};
 	var API_Key =  "<%= Spree::Betaout::Config.account_key%>";
 	var Project_Id ="<%= Spree::Betaout::Config.account_id%>";
-	var AmplifyConnect_Widget = true;var Amplify={}; var shareTracking = true;var urlTracking = true;function _amplify(u) {var d = document, f = d.getElementsByTagName("script")[0],_sc = d.createElement("script");_sc.type = "text/javascript";_sc.async = true;_sc.src = u;f.parentNode.insertBefore(_sc, f);var __d = false;_sc.onload = _sc.onreadystatechange = function() {if (!__d && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete")) {__d = true;Amplify = new AmplifyEngine();}};}_amplify("//d3oa6jk77hlbow.cloudfront.net/tejas.min.js");window.amplifyInit = function() {
+	var AmplifyConnect_Widget = true;var Amplify={}; var shareTracking = true;var urlTracking = true;function _amplify(u) {var d = document, f = d.getElementsByTagName("script")[0],_sc = d.createElement("script");_sc.type = "text/javascript";_sc.async = true;_sc.src = u;f.parentNode.insertBefore(_sc, f);var __d = false;_sc.onload = _sc.onreadystatechange = function() {if (!__d && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete")) {__d = true;Amplify = new AmplifyEngine();}};}_amplify("//d22vyp49cxb9py.cloudfront.net/jal.min.js");window.amplifyInit = function() {
 	
 	<% if spree_current_user %>
 	   	betaoutCurrentLoginUser ="<%= spree_current_user.email %>";

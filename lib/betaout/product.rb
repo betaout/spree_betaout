@@ -11,13 +11,13 @@ module Betaout
       category_hash = {}
 
       @spree_product.taxons.each do |t|
-        category_hash[t.name] = {
-          'v' => t.id,
+        category_hash[t.id] = {
+          'n' => t.name,
           'p' => t.parent_id,
         }
         t.ancestors.each do |a|
-          category_hash[a.name] = {
-            'v' => a.id,
+          category_hash[a.id] = {
+            'n' => a.name,
             'p' => a.parent_id ? a.parent_id : 0,
           }
         end
@@ -34,8 +34,7 @@ module Betaout
         'pageURL' => @page_url,
         'pictureURL' => @picture_url,
         'currency' => @spree_product.currency,
-        'category' => @spree_product.taxons.pluck(:id).join(","), # TODO: should send ids, and names separately
-        'category_info' => category_hash,
+        'category' => category_hash
       }
     end
   end
