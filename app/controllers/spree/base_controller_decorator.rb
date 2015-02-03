@@ -6,7 +6,7 @@ Spree::BaseController.class_eval do
   private
 
     def betaout_check_for_ott
-      if cookies[:_betaoutUITN].nil? && cookies[:_betaoutEMAIL].nil
+      if cookies[:_betaoutUITN].nil? && cookies[:_betaoutEMAIL].nil?
         logger.debug "spree_betaout: didn't have an OTT, so fetching it"
         ott=SecureRandom.uuid
         session[:betaout_ott]=ott
