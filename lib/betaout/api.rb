@@ -8,11 +8,10 @@ module Betaout
     debug_output $stdout
 
     def initialize(session = {})
-      if(!Spree::Betaout::Config.account_id)
-       return true;
-
+      
       self.class.base_uri "#{Spree::Betaout::Config.account_id}.betaout.in"
-
+       @projectid=Spree::Betaout::Config.account_id
+     
       @body_params = {
         'apiKey' => Spree::Betaout::Config.account_key,
         'timestamp' => Time.now.to_i,
@@ -36,10 +35,13 @@ module Betaout
 
     def identify
       body_params=@body_params.merge({'token'=>@token})
-      self.class.post("/v1/user/identify",{body:'params='+body_params.to_json})
+      if @projectid.to_s!=''
+        self.class.post("/v1/user/identify",{body:'params='+body_params.to_json})
+       end
     end
 
     def customer_viewed_product(product)
+        
      body_params = @body_params.merge({
         'email' => @email,
         'action' => 'viewed',
@@ -48,9 +50,12 @@ module Betaout
         'systemInfo'=>@systemInfo
       })
 
-      self.class.post("/v1/user/customer_activity", {
-        body: 'params=' + body_params.to_json,
-      })
+      if @projectid.to_s!=''
+          self.class.post("/v1/user/customer_activity", {
+         body: 'params=' + body_params.to_json,
+          })
+      end
+     
     end
 
     def customer_added_product_to_cart(product, quantity, order)
@@ -67,10 +72,11 @@ module Betaout
         'ip'=>@ip,
         'systemInfo'=>@systemInfo
       })
-
-      self.class.post("/v1/user/customer_activity", {
-        body: 'params=' + body_params.to_json,
-      })
+       if @projectid.to_s!=''
+        self.class.post("/v1/user/customer_activity", {
+          body: 'params=' + body_params.to_json,
+        })
+      end 
     end
 
     def customer_removed_product_from_cart(product, quantity, order)
@@ -86,10 +92,11 @@ module Betaout
        'ip'=>@ip,
         'systemInfo'=>@systemInfo
       })
-
+       if @projectid.to_s!=''
       self.class.post("/v1/user/customer_activity", {
         body: 'params=' + body_params.to_json,
       })
+      end
     end
 
     def customer_added_product_to_wishlist(product)
@@ -100,10 +107,11 @@ module Betaout
         'ip'=>@ip,
         'systemInfo'=>@systemInfo
       })
-
-      self.class.post("/v1/user/customer_activity", {
+      if @projectid.to_s!=''
+        self.class.post("/v1/user/customer_activity", {
         body: 'params=' + body_params.to_json,
-      })
+         })
+      end
     end
 
     def customer_reviewed_product(product)
@@ -114,10 +122,11 @@ module Betaout
          'ip'=>@ip,
         'systemInfo'=>@systemInfo
       })
-
+     if @projectid.to_s!=''
       self.class.post("/v1/user/customer_activity", {
         body: 'params=' + body_params.to_json,
       })
+    end
     end
 
     def customer_shared_product(product)
@@ -128,10 +137,11 @@ module Betaout
         'ip'=>@ip,
         'systemInfo'=>@systemInfo
       })
-
+      if @projectid.to_s!=''
       self.class.post("/v1/user/customer_activity", {
         body: 'params=' + body_params.to_json,
       })
+     end
     end
 
     def customer_completed(products, order)
@@ -151,20 +161,25 @@ module Betaout
         'ip'=>@ip,
         'systemInfo'=>@systemInfo
       })
-
+     if @projectid.to_s!=''
       self.class.post("/v1/user/customer_activity", {
         body: 'params=' + body_params.to_json,
       })
+     end
     end
 
     # TODO: does this work? should I expect to see the product in the Betaout admin if no one's viewed it or purchased it yet?
     def product_added(product)
+     if @projectid.to_s!=''
       self.class.post("/v1/product/add", body: @body_params.merge(product).to_json)
+    end
     end
 
     # TODO: does this work? I get a 200 ok response, but doesn't change product name in Betaout admin, for instance
     def product_edited(product)
+     if @projectid.to_s!=''
       self.class.post("/v1/product/edit", body: @body_params.merge(product).to_json)
+     end
     end
 
     def payment_state(order)
@@ -188,7 +203,9 @@ module Betaout
   end
 
   def self.fetch_ott(session)
-    API.new(session).identify.parsed_response["amplifySession"]
+      if @projectid.to_s!=''
+         API.new(session).identify.parsed_response["amplifySession"]
+     end
   end
 
   def self.customer_viewed_product(args)
