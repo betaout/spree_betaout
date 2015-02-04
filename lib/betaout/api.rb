@@ -8,6 +8,9 @@ module Betaout
     debug_output $stdout
 
     def initialize(session = {})
+      if(!Spree::Betaout::Config.account_id)
+       return true;
+
       self.class.base_uri "#{Spree::Betaout::Config.account_id}.betaout.in"
 
       @body_params = {
