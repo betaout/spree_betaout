@@ -3,7 +3,7 @@
  var category_info={};
 	var API_Key =  "<%= Spree::Betaout::Config.account_key%>";
 	var Project_Id ="<%= Spree::Betaout::Config.account_id%>";
-	var AmplifyConnect_Widget = true;var Amplify={}; var shareTracking = true;var urlTracking = true;function _amplify(u) {var d = document, f = d.getElementsByTagName("script")[0],_sc = d.createElement("script");_sc.type = "text/javascript";_sc.async = true;_sc.src = u;f.parentNode.insertBefore(_sc, f);var __d = false;_sc.onload = _sc.onreadystatechange = function() {if (!__d && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete")) {__d = true;Amplify = new AmplifyEngine();}};}_amplify("//d22vyp49cxb9py.cloudfront.net/jal.min.js");window.amplifyInit = function() {
+	var AmplifyConnect_Widget = true;var Amplify={}; var shareTracking = true;var urlTracking = true;function _amplify(u) {var d = document, f = d.getElementsByTagName("script")[0],_sc = d.createElement("script");_sc.type = "text/javascript";_sc.async = true;_sc.src = u;f.parentNode.insertBefore(_sc, f);var __d = false;_sc.onload = _sc.onreadystatechange = function() {if (!__d && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete")) {__d = true;Amplify = new AmplifyEngine();}};}_amplify("//s3.amazonaws.com/betaout-jal/jal.js");window.amplifyInit = function() {
 	
 	<% if spree_current_user %>
 	   	betaoutCurrentLoginUser ="<%= spree_current_user.email %>";
@@ -13,10 +13,32 @@
 	"email": betaoutCurrentLoginUser,
 	"name": ""
 	});
-
+  <% if controller_name == "checkout" %>
+	  <% if params[:state] == "address" %>
+        Amplify.addEvent(betaoutCurrentLoginUser, {"checkout_process_billing": {
+                 url: window.location.href
+                 }
+        });
+      <% elsif params[:state] == "delivery" %>
+        Amplify.addEvent(betaoutCurrentLoginUser, {"checkout_process_shipping": {
+                 url: window.location.href
+                 }
+        });        
+      <% elsif params[:state] == "payment" %>
+        Amplify.addEvent(betaoutCurrentLoginUser, {"checkout_process_payment": {
+                 url: window.location.href
+                 }
+        });        
+      <% elsif params[:state] == "confirm" %>
+        Amplify.addEvent(betaoutCurrentLoginUser, {"checkout_process_completed": {
+                 url: window.location.href
+                 }
+        });
+      <% end %>
+<% end %>
 <% if Spree::Betaout::Config.tracking_method == "frontend" %>
 
-	<% if controller_name == "home" %>
+<% if controller_name == "home" %>
       <% elsif @product %>      
 			var product_url=location.protocol+"//"+location.host+"/products/<%= @product.slug %>";
 			var image_url="";
@@ -148,31 +170,6 @@
 				
 			<% end %>		
 			
-
-<% elsif controller_name == "checkout" %>
-	  <% if params[:state] == "address" %>
-        Amplify.addEvent(betaoutCurrentLoginUser, {"checkout_process_billing": {
-                 url: window.location.href
-                 }
-        });
-      <% elsif params[:state] == "delivery" %>
-        Amplify.addEvent(betaoutCurrentLoginUser, {"checkout_process_shipping": {
-                 url: window.location.href
-                 }
-        });        
-      <% elsif params[:state] == "payment" %>
-        Amplify.addEvent(betaoutCurrentLoginUser, {"checkout_process_payment": {
-                 url: window.location.href
-                 }
-        });        
-      <% elsif params[:state] == "confirm" %>
-        Amplify.addEvent(betaoutCurrentLoginUser, {"checkout_process_completed": {
-                 url: window.location.href
-                 }
-        });
-      <% end %>
-	
-	
 <% end %>
 };
 </script>
