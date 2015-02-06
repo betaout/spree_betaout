@@ -203,9 +203,8 @@ module Betaout
   end
 
   def self.fetch_ott(session)
-      if @projectid.to_s!=''
-         API.new(session).identify.parsed_response["amplifySession"]
-     end
+     API.new(session).identify.parsed_response["amplifySession"]
+    
   end
 
   def self.customer_viewed_product(args)
