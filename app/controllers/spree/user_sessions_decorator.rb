@@ -3,8 +3,8 @@ Spree::UserSessionsController.class_eval do
 
   private
     def betaout_call_identify
-      logger.debug "spree_betaout: after login, calling identify"
-      if cookies[:_betaoutUITN].nil? && cookies[:_betaoutEMAIL].nil?
+      logger.debug "spree_betaout: after login, calling identify#{Spree::Betaout::Config.account_id}"
+      if cookies[:_ampUITN].nil? && cookies[:_ampEm].nil?
         logger.debug "spree_betaout: didn't have an OTT, so fetching it"
         ott=SecureRandom.uuid
         session[:betaout_ott]=ott
@@ -12,17 +12,19 @@ Spree::UserSessionsController.class_eval do
         session[:betaout_systemInfo] = request.env['HTTP_USER_AGENT']
         if spree_current_user && spree_current_user.email
            session[:betaout_email] =spree_current_user.email
-           cookies[:_betaoutEMAIL] =spree_current_user.email
+           cookies[:_ampEm] =Base64.encode64(spree_current_user.email)
         end
         Betaout.fetch_ott(session)
-        cookies[:_ampUITN] = ott
-        cookies[:_betaoutUITN] = ott
+        cookies[:_ampUITN]="";
       else
+        logger.debug "spree_betaout: have an OTT login"
         if spree_current_user && spree_current_user.email
           session[:betaout_email] =spree_current_user.email
-          cookies[:_betaoutEMAIL] =spree_current_user.email
+          cookies[:_ampEm] =Base64.encode64(spree_current_user.email)
         end
         Betaout.fetch_ott(session);
+        cookies[:_ampUITN]="";
+
       end
     end
 end

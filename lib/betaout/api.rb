@@ -24,7 +24,7 @@ module Betaout
       @systemInfo=session[:betaout_systemInfo] if session[:betaout_systemInfo].present?
       @email = session[:betaout_email]
       if @email.to_s!=''
-      @body_params['email']=session[:betaout_email]
+      @body_params['email']=@email
       @body_params['token']=""
       end
      if @name
@@ -203,8 +203,8 @@ module Betaout
   end
 
   def self.fetch_ott(session)
-     API.new(session).identify.parsed_response["amplifySession"]
-    
+        puts "call ott inside#{session[:betaout_email]}"
+          API.new(session).identify.parsed_response["amplifySession"]
   end
 
   def self.customer_viewed_product(args)

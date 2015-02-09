@@ -6,9 +6,8 @@ Spree::CheckoutController.class_eval do
     def betaout_track_customer_completed
     logger.debug "spree_betaout: checkout complete, so fetching it"
       if @order.completed? && flash[:commerce_tracking]
-         logger.debug "spree_betaout: checkout complete,insert"
-        Betaout.fetch_ott(session)
-        Betaout.customer_completed({
+            logger.debug "spree_betaout: checkout complete,insert"
+       Betaout.customer_completed({
           session: session,
           order: @order,
           line_items: @order.line_items.map { |li|
