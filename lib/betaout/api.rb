@@ -170,7 +170,6 @@ module Betaout
         },
         'ip'=>@ip,
         'systemInfo'=>@systemInfo
-        
       })
      if @projectid.to_s!=''
       self.class.post("/v1/user/customer_activity", {
