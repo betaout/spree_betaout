@@ -148,6 +148,11 @@ module Betaout
     end
 
     def customer_completed(products, order)
+     code=""
+       myprmotions=order.promotions
+         myprmotions.each do |p|
+          code=p.code
+       end
       body_params = @body_params.merge({
         'email' => @email,
         'action' => 'purchased',
@@ -161,9 +166,11 @@ module Betaout
           'totalPrice' => order.total.to_f,
           'currency'=>order.currency,
           'financialStatus' => payment_state(order),
+          'promocode'=>code
         },
         'ip'=>@ip,
         'systemInfo'=>@systemInfo
+        
       })
      if @projectid.to_s!=''
       self.class.post("/v1/user/customer_activity", {
