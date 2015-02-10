@@ -156,6 +156,7 @@ module Betaout
           'totalTaxes' => order.tax_total.to_f,
           'totalDiscount' => order.promo_total.to_f,
           'totalPrice' => order.total.to_f,
+          'currency'=>order.currency,
           'financialStatus' => payment_state(order),
         },
         'ip'=>@ip,
