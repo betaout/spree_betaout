@@ -22,6 +22,7 @@ module Betaout
       @body_params['systemInfo'] = session[:betaout_systemInfo] if session[:betaout_systemInfo].present?
       @ip=session[:betaout_ip] if session[:betaout_ip].present?
       @systemInfo=session[:betaout_systemInfo] if session[:betaout_systemInfo].present?
+      @host=session[:betaout_host] if session[:betaout_host].present?
       @email = session[:betaout_email]
       if @email.to_s!=''
       @body_params['email']=@email
@@ -47,6 +48,7 @@ module Betaout
         'action' => 'viewed',
         'pd' => [ product ],
         'ip'=>@ip,
+        'acu' => @host+'/cart/',
         'systemInfo'=>@systemInfo
       })
 
@@ -70,6 +72,7 @@ module Betaout
         },
         'currency'=>order.currency,
         'ip'=>@ip,
+        'acu' => @host+'/cart/',
         'systemInfo'=>@systemInfo
       })
        if @projectid.to_s!=''
