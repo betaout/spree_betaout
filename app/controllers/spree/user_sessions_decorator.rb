@@ -22,9 +22,10 @@ Spree::UserSessionsController.class_eval do
         if spree_current_user && spree_current_user.email
           session[:betaout_email] =spree_current_user.email
           cookies[:_ampEm] =Base64.encode64(spree_current_user.email)
+          Betaout.fetch_ott(session);
+          cookies[:_ampUITN]="";
         end
-        Betaout.fetch_ott(session);
-        cookies[:_ampUITN]="";
+        
 
       end
     end
