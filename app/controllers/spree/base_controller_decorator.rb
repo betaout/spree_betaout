@@ -13,7 +13,6 @@ Spree::BaseController.class_eval do
         session[:betaout_ip] = request.env['REMOTE_ADDR']
         session[:betaout_systemInfo] = request.env['HTTP_USER_AGENT']
         session[:betaout_host] = request.env['HTTP_HOST']
-        Betaout.fetch_ott(session)
         cookies[:_ampUITN] = ott
        logger.debug "spree_betaout: basic fetched OTT: #{ott.inspect}"
       else
