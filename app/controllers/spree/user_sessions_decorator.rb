@@ -10,6 +10,7 @@ Spree::UserSessionsController.class_eval do
         session[:betaout_ott]=ott
         session[:betaout_ip] = request.env['REMOTE_ADDR']
         session[:betaout_systemInfo] = request.env['HTTP_USER_AGENT']
+        session[:betaout_host] = request.env['HTTP_HOST']
         if spree_current_user && spree_current_user.email
            session[:betaout_email] =spree_current_user.email
            cookies[:_ampEm] =Base64.encode64(spree_current_user.email)
