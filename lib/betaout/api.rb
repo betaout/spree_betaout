@@ -165,6 +165,7 @@ module Betaout
           'totalDiscount' => order.promo_total.to_f,
           'totalPrice' => order.total.to_f,
           'currency'=>order.currency,
+          'paymentMethod' => order.payments.any? ? order.payments.first.payment_method.name : '',
           'financialStatus' => payment_state(order),
           'promocode'=>code
         },
