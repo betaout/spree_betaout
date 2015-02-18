@@ -3,15 +3,30 @@ Spree::UserSessionsController.class_eval do
 
   private
     def betaout_call_identify
-      logger.debug "spree_betaout: after login, calling identify"
-      if cookies[:amplifyUid].nil?
+      logger.debug "spree_betaout: after login, calling identify#{Spree::Betaout::Config.account_id}"
+      if cookies[:_ampUITN].nil? && cookies[:_ampEm].nil?
         logger.debug "spree_betaout: didn't have an OTT, so fetching it"
-        ott = Betaout.fetch_ott(session)
-        logger.debug "spree_betaout: fetched OTT: #{ott.inspect}"
-        cookies[:amplifyUid] = ott
+        ott=SecureRandom.uuid
+        session[:betaout_ott]=ott
+        session[:betaout_ip] = request.env['REMOTE_ADDR']
+        session[:betaout_systemInfo] = request.env['HTTP_USER_AGENT']
+        session[:betaout_host] = request.env['HTTP_HOST']
+        if spree_current_user && spree_current_user.email
+           session[:betaout_email] =spree_current_user.email
+           cookies[:_ampEm] =Base64.encode64(spree_current_user.email)
+        end
+        Betaout.fetch_ott(session)
+        cookies[:_ampUITN]="";
       else
-        logger.debug "spree_betaout: had OTT, so doing nothing: #{cookies[:amplifyUid]}"
+        logger.debug "spree_betaout: have an OTT login"
+        if spree_current_user && spree_current_user.email
+          session[:betaout_email] =spree_current_user.email
+          cookies[:_ampEm] =Base64.encode64(spree_current_user.email)
+          Betaout.fetch_ott(session);
+          cookies[:_ampUITN]="";
+        end
+        
+
       end
-      session[:betaout_ott] = cookies[:amplifyUid]
     end
 end

@@ -34,8 +34,7 @@ module Betaout
         'pageURL' => @page_url,
         'pictureURL' => @picture_url,
         'currency' => @spree_product.currency,
-        'category' => @spree_product.taxons.pluck(:id).join(","), # TODO: should send ids, and names separately
-        'category_info' => category_hash,
+        'category' => category_hash
       }
     end
   end
