@@ -1,39 +1,47 @@
 <script type="text/javascript">
  var betaoutCurrentLoginUser="";
  var category_info={};
-	var API_Key =  "<%= Spree::Betaout::Config.account_key%>";
-	var Project_Id ="<%= Spree::Betaout::Config.account_id%>";
-	var AmplifyConnect_Widget = true;var Amplify={}; var shareTracking = true;var urlTracking = true;function _amplify(u) {var d = document, f = d.getElementsByTagName("script")[0],_sc = d.createElement("script");_sc.type = "text/javascript";_sc.async = true;_sc.src = u;f.parentNode.insertBefore(_sc, f);var __d = false;_sc.onload = _sc.onreadystatechange = function() {if (!__d && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete")) {__d = true;Amplify = new AmplifyEngine();}};}_amplify("//d22vyp49cxb9py.cloudfront.net/jal.min.js");window.amplifyInit = function() {
-	
+var _bOutAKEY =  "<%= Spree::Betaout::Config.account_key%>";
+var _bOutPID ="<%= Spree::Betaout::Config.account_id%>";
+var _bOut = _bOut || [];
+var  _bOutCW = true, _bOutST = true;
+function _bOutS(u) {
+var d = document, f = d.getElementsByTagName("script")[0], _sc = d.createElement("script");
+_sc.type = "text/javascript";
+_sc.async = true;
+_sc.src = u;
+f.parentNode.insertBefore(_sc, f);
+}
+_bOutS('//d22vyp49cxb9py.cloudfront.net/jal.min.js');
 	<% if spree_current_user %>
 	   	betaoutCurrentLoginUser ="<%= spree_current_user.email %>";
 	<% end %>
+	_bOut.push(["identify",{
+	  "email":betaoutCurrentLoginUser,
+	  "name": ""
+	}]);
 	
-	Amplify.identify({
-	"email": betaoutCurrentLoginUser,
-	"name": ""
-	});
   <% if controller_name == "checkout" %>
 	  <% if params[:state] == "address" %>
-        Amplify.addEvent(betaoutCurrentLoginUser, {"checkout_process_billing": {
+        _bOut.push(["addEvent",betaoutCurrentLoginUser, {"checkout_process_billing": {
                  url: window.location.href
                  }
-        });
+        }]);
       <% elsif params[:state] == "delivery" %>
-        Amplify.addEvent(betaoutCurrentLoginUser, {"checkout_process_shipping": {
+        _bOut.push(["addEvent",betaoutCurrentLoginUser, {"checkout_process_shipping": {
                  url: window.location.href
                  }
-        });        
+        }]);        
       <% elsif params[:state] == "payment" %>
-        Amplify.addEvent(betaoutCurrentLoginUser, {"checkout_process_payment": {
+       _bOut.push(["addEvent",betaoutCurrentLoginUser, {"checkout_process_payment": {
                  url: window.location.href
                  }
-        });        
+        }]);        
       <% elsif params[:state] == "confirm" %>
-        Amplify.addEvent(betaoutCurrentLoginUser, {"checkout_process_completed": {
+        _bOut.push(["addEvent",betaoutCurrentLoginUser, {"checkout_process_completed": {
                  url: window.location.href
                  }
-        });
+        }]);
       <% end %>
 <% end %>
 <% if Spree::Betaout::Config.tracking_method == "frontend" %>
@@ -63,7 +71,7 @@
                             <% end%>     
      		          <% end %>
 
-                 Amplify.customerActivity(betaoutCurrentLoginUser, 'viewed', {
+                _bOut.push(["customerActivity",betaoutCurrentLoginUser, 'viewed', {
                                 'products' : [{
                                         'productId' : "<%= @product.id %>",
                                         'sku' : "<%= @product.sku %>",
@@ -79,12 +87,12 @@
                                         'category' : "<%= @product.taxons.pluck(:name).join(",") %>",
                                         'category_info':category_info
                                 }]
-			});				
+			}]);				
                        
 			if ($) {
 				$(document).ready(function() {
 					$("button#add-to-cart-button").on("click", function(event) {	
-                                                Amplify.customerActivity(betaoutCurrentLoginUser, 'add_to_cart', {
+                                                _bOut.push(["customerActivity",betaoutCurrentLoginUser, 'add_to_cart', {
                                                         'products' : [{
                                                         'productId' : "<%= @product.id %>",
                                                         'sku' : "<%= @product.sku %>",
@@ -109,7 +117,7 @@
 		
 						return true; 
 					});
-				});
+				}]);
 			}
 	<% elsif controller_name == "orders" %>
            <%= debug@order.line_items %>
@@ -150,7 +158,7 @@
 									'category' : "",
 								}
 						<% end %>
-							Amplify.customerActivity("<%= @order.email %>", 'purchased', {
+							_bOut.push(["customerActivity","<%= @order.email %>", 'purchased', {
 								'products' : Products,
 								'cartInfo' : {
 									'orderId' : "<%= @order.number %>",
@@ -164,7 +172,7 @@
 									'abandonedCheckoutUrl' : '',
 									'financialStatus' : "<%= @order.payment_state %>", // checkout, processing, painding, failed, void, compleated
 								}
-							});
+							}]);
 					<% end %>
 				<% else %>
 				
