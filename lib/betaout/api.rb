@@ -149,6 +149,8 @@ module Betaout
 
     def customer_completed(products, order)
      code=""
+    newtotal=order.item_total.to_f;
+     newtotal+=order.promo_total.to_f;
        myprmotions=order.promotions
          myprmotions.each do |p|
           code=p.code
@@ -159,7 +161,7 @@ module Betaout
         'pd' => products,
         'or' => {
           'orderId' => order.number,
-          'subtotalPrice' => order.item_total.to_f,
+          'subtotalPrice' => newtotal,
           'totalShippingPrice' => order.ship_total.to_f,
           'totalTaxes' => order.tax_total.to_f,
           'totalDiscount' => order.promo_total.to_f,
@@ -259,6 +261,9 @@ module Betaout
 
       product[:price] = li[:line_item].price.to_s
       product[:qty] = li[:qty]
+      product[:discountPrice]=li[:discountPrice]
+      product[:totalProductPrice]=li[:totalProductPrice]
+      product[:promocode]=li[:promocode];
       product
     end
 
