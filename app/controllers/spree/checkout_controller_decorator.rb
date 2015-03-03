@@ -16,6 +16,9 @@ Spree::CheckoutController.class_eval do
               page_url: product_url(li.product),
               picture_url: li.product.images.any? ? root_url + li.product.images.first.attachment.url : nil,
               qty: li.quantity,
+              discountPrice:li.promo_total.to_s,
+              totalProductPrice:li.pre_tax_amount.to_s,
+              promocode:"",
             }
           },
         })
