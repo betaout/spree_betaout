@@ -217,7 +217,7 @@ module Betaout
 
   def self.fetch_ott(session)
         puts "call ott inside#{session[:betaout_email]}"
-          API.new(session).identify.parsed_response["amplifySession"]
+          API.new(session).identify
   end
 
   def self.customer_viewed_product(args)
