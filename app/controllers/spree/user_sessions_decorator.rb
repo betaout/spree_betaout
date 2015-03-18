@@ -13,6 +13,7 @@ Spree::UserSessionsController.class_eval do
         session[:betaout_host] = request.env['HTTP_HOST']
         if spree_current_user && spree_current_user.email
            session[:betaout_email] =spree_current_user.email
+           session[:betaout_name] =spree_current_user.first_name
            cookies[:_ampEm] =Base64.encode64(spree_current_user.email)
         end
         Betaout.fetch_ott(session)
@@ -21,6 +22,7 @@ Spree::UserSessionsController.class_eval do
         logger.debug "spree_betaout: have an OTT login"
         if spree_current_user && spree_current_user.email
           session[:betaout_email] =spree_current_user.email
+          session[:betaout_name] =spree_current_user.first_name
           cookies[:_ampEm] =Base64.encode64(spree_current_user.email)
           Betaout.fetch_ott(session);
           cookies[:_ampUITN]="";
